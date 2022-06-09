@@ -9,13 +9,17 @@ m(..., asis = getOption("m_asis", FALSE))
 \arguments{
 \item{...}{Any number of strings (to be concatenated).}
 
-\item{asis}{If TRUE, output is generated with \code{cat}; in this case, the function must be called inside a chunk with \code{results='asis'}. If FALSE, output is generated with \code{knitr::asis_output}; in this case, \code{results='asis'} is not necessary.}
+\item{asis}{If TRUE, output is generated with \code{cat}; in this case, the function must be called inside a chunk with \code{results='asis'}. If FALSE, output is generated with \code{\link[knitr]{asis_output}}; in this case, \code{results='asis'} is not necessary.}
 }
 \value{
 A character vector after interpolation.
 }
 \description{
-Expressions enclosed by \verb{<<} and \verb{>>} will be evaluated as Python (or optionally R) code. Long strings are broken by line and concatenated together. Leading whitespace and blank lines from the first and last lines are automatically trimmed.
+This an extension of \code{\link[glue]{glue}}.
+
+Expressions enclosed by \verb{<<} and \verb{>>} will be evaluated as Python (or optionally R) code. The result will be inserted as LaTeX math code (optionally R expressions).
+
+Long strings are broken by line and concatenated together. Leading whitespace and blank lines from the first and last lines are automatically trimmed.
 }
 \author{
 fnaufel

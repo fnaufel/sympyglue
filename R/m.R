@@ -1,9 +1,13 @@
 #' Assemble string with interpolated values
 #'
-#' @description Expressions enclosed by `<<` and `>>` will be evaluated as Python (or optionally R) code. Long strings are broken by line and concatenated together. Leading whitespace and blank lines from the first and last lines are automatically trimmed.
+#' @description This an extension of \code{\link[glue]{glue}}.
+#'
+#' Expressions enclosed by `<<` and `>>` will be evaluated as Python (or optionally R) code. The result will be inserted as LaTeX math code (optionally R expressions).
+#'
+#' Long strings are broken by line and concatenated together. Leading whitespace and blank lines from the first and last lines are automatically trimmed.
 #'
 #' @param ... Any number of strings (to be concatenated).
-#' @param asis If TRUE, output is generated with `cat`; in this case, the function must be called inside a chunk with `results='asis'`. If FALSE, output is generated with `knitr::asis_output`; in this case, `results='asis'` is not necessary.
+#' @param asis If TRUE, output is generated with `cat`; in this case, the function must be called inside a chunk with `results='asis'`. If FALSE, output is generated with \code{\link[knitr]{asis_output}}; in this case, `results='asis'` is not necessary.
 #'
 #' @return A character vector after interpolation.
 #'

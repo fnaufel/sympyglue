@@ -1,10 +1,10 @@
 Package: sympyglue
-Title: Interpreted String Literals for sympy and R
+Title: Interpreted String Literals for Sympy and R
 Version: 0.0.0.9000
 Authors@R: person("Fernando", "Naufel", , "fnaufel@gmail.com", role =
        c("aut", "cre"))
 Description: An extension of the glue package to handle mathematical 
-       expressions created by sympy.
+       expressions created by Sympy.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
