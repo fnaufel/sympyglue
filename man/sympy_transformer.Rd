@@ -7,7 +7,7 @@
 sympy_transformer(text, envir)
 }
 \arguments{
-\item{text}{Contents between one \verb{<<...>>} pair.}
+\item{text}{Contents between one \code{{{...}}} pair.}
 
 \item{envir}{Not used.}
 }

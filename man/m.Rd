@@ -4,20 +4,50 @@
 \alias{m}
 \title{Assemble string with interpolated values}
 \usage{
-m(..., asis = getOption("m_asis", FALSE))
+m(
+  ...,
+  sep = " ",
+  sep_middle = "\\n",
+  before = NULL,
+  sep_before = "\\n",
+  after = NULL,
+  sep_after = "\\n",
+  sep_blocks = "\\n",
+  use_cat = getOption("m_use_cat", FALSE)
+)
 }
 \arguments{
 \item{...}{Any number of strings (to be concatenated).}
 
-\item{asis}{If TRUE, output is generated with \code{cat}; in this case, the function must be called inside a chunk with \code{results='asis'}. If FALSE, output is generated with \code{\link[knitr]{asis_output}}; in this case, \code{results='asis'} is not necessary.}
+\item{sep}{Separator between main strings (\code{...}).
+
+If \code{...} is only one string, this has no effect.}
+
+\item{sep_middle}{Separator between elements of the interpolated character vectors.
+
+If none of the \code{{{...}}} fields generates vectors with length > 1, this has no effect.}
+
+\item{before}{Text to be emitted at the beginning. May NOT contain \code{{{...}}} fields.}
+
+\item{sep_before}{Separator between elements of \code{before} (if length > 1).}
+
+\item{after}{Text to be emitted at the end. May NOT contain \code{{{...}}} fields.}
+
+\item{sep_after}{Separator between elements of \code{after} (if length > 1).}
+
+\item{sep_blocks}{Separator between \code{before}, \code{middle} and \code{after}.}
+
+\item{use_cat}{If TRUE, output is generated with \code{\link[stringr]{str_c}}; in this case, the function must be called inside a chunk with \code{results='asis'}.
+
+If FALSE, output is generated with \code{\link[knitr]{asis_output}}; in this case, \code{results='asis'} is not necessary.}
 }
 \value{
-A character vector after interpolation.
+A character string after interpolation.
 }
 \description{
 This an extension of \code{\link[glue]{glue}}.
 
-Expressions enclosed by \verb{<<} and \verb{>>} will be evaluated as Python (or optionally R) code. The result will be inserted as LaTeX math code (optionally R expressions).
+Expressions enclosed by \verb{\{\{} and \verb{\}\}} will be evaluated as Python (or optionally R) code. The result will be inserted as LaTeX math code (optionally R expressions).
 
 Long strings are broken by line and concatenated together. Leading whitespace and blank lines from the first and last lines are automatically trimmed.
 }
