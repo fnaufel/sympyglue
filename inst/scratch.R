@@ -43,8 +43,6 @@ stringr::str_c(
   collapse = ' / '
 )
 
-glue(
-  'A sample string.',
-  'And another.',
-  .sep = ' '
+glue::glue(
+  '{a} {b}',
 )
