@@ -1,8 +1,10 @@
-#' Assemble string with interpolated values
+#' Assemble string with interpolated values from R or Sympy
 #'
 #' @description This an extension of \code{\link[glue]{glue}}.
 #'
-#' Expressions enclosed by `{{` and `}}` will be evaluated as Python (or optionally R) code. The result will be inserted as LaTeX math code (optionally R expressions).
+#' Expressions enclosed by `{{` and `}}` will be evaluated as Sympy (or optionally R) code.
+#'
+#' If evaluated as Sympy code, the result will be inserted as LaTeX.
 #'
 #' Long strings are broken by line and concatenated together. Leading whitespace and blank lines from the first and last lines are automatically trimmed.
 #'
@@ -120,7 +122,7 @@ sympy_transformer <- function(text, envir) {
     )
   } else {
   # If single object, just call latex function
-    m_latex <- ~reticulate::py$latex(obj, decimal_separator = decimal)
+    m_latex <- reticulate::py$latex(obj, decimal_separator = decimal)
   }
 
   m_latex
