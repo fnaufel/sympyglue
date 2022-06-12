@@ -42,3 +42,9 @@ stringr::str_c(
   c(1, 2, 3),
   collapse = ' / '
 )
+
+glue(
+  'A sample string.',
+  'And another.',
+  .sep = ' '
+)
