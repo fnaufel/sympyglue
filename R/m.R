@@ -62,7 +62,7 @@
 #'
 m <- function(
     ...,
-    sep = ' ',
+    sep = '',
     sep_middle = '\n',
     before = NULL,
     sep_before = '\n',
