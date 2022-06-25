@@ -42,11 +42,12 @@
 #'
 #'   The strings in `...` may contain *fields* of the form `{{text}}.`
 #'
-#'   If `text` starts with a colon, different printers are invoked for this field, depending on the character following the colon:
+#'   If `text` starts with a special prefix, different printers are invoked for this field, depending on the prefix:
 #'
-#'   * `:l `: use LaTeX printer on the Sympy expression denoted by the rest of the field. This is also the default behavior, when `text` does not begin with a colon.
-#'   * `:r `: use R printer on the Sympy expression denoted by the rest of the field.
-#'   * `:g `: use *original glue behavior* --- interpolation uses R environment --- on the R expression denoted by the rest of the field.
+#'   * `l: `: use LaTeX printer on the Sympy expression denoted by the rest of the field. This is also the default behavior, when `text` does not begin with a colon.
+#'   * `r: `: use R printer on the Sympy expression denoted by the rest of the field.
+#'   * `s: `: use string printer on the Sympy expression denoted by the rest of the field.
+#'   * `g: `: use *original glue behavior* --- interpolation uses R environment --- on the R expression denoted by the rest of the field.
 #'
 #' @return A character string after interpolation. I.e., a character vector of length 1 --- in R jargon, the output is *collapsed*.
 #'
@@ -122,6 +123,44 @@ m <- function(
 #'
 sympy_transformer <- function(text, envir) {
 
+  # Prefixes and associated printers
+  printers <- c(
+    'r:' = rprinter,
+    'l:' = latexprinter,
+    's:' = stringprinter
+  )
+
+  # Get possible prefix
+  this_prefix <- tolower(substring(text, 1, 2))
+
+  # Pick printer according to prefix or default to LaTeX
+  if (this_prefix %in% names(printers)) {
+    printer <- printers[this_prefix]
+    text <- substring(text, 3)
+  } else {
+    printer <- latexprinter
+  }
+
+  # Evaluate text in python
+  obj <- reticulate::py_run_string(paste0('__m = ', text))
+  obj <- obj[['__m']]
+
+  if (is.vector(obj)) {
+    # If list or vector, map printer function; result is a character vector
+    m_printed <- purrr::map_chr(obj, printer)
+  } else {
+    # If single object, just call printer function
+    m_printed <- printer(obj)
+  }
+
+  m_printed
+
+}
+
+
+# LaTeX printer
+latexprinter <- function(obj) {
+
   # Comma or period for decimal?
   decimal <- ifelse(
     getOption('OutDec') == ',',
@@ -129,21 +168,20 @@ sympy_transformer <- function(text, envir) {
     'period'
   )
 
-  # Evaluate text in python
-  obj <- reticulate::py_run_string(paste0('__m = ', text))
-  obj <- obj[['__m']]
+  reticulate::py$latex(obj, decimal_separator = decimal)
 
-  # If list or vector, map latex function; result is a character vector
-  if (is.vector(obj)) {
-    m_latex <- purrr::map_chr(
-      obj,
-      ~reticulate::py$latex(., decimal_separator = decimal)
-    )
-  } else {
-  # If single object, just call latex function
-    m_latex <- reticulate::py$latex(obj, decimal_separator = decimal)
-  }
+}
 
-  m_latex
+# R printer
+rprinter <- function(obj) {
+
+  reticulate::py$rcode(obj)
+
+}
+
+# String printer
+stringprinter <- function(obj) {
+
+  reticulate::py$sstr(obj)
 
 }

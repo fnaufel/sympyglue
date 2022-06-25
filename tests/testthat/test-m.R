@@ -30,7 +30,7 @@ test_that("Two strings, no interpolation, cat output", {
       'And another.',
       use_cat = TRUE
     ),
-    "A sample string. And another."
+    "A sample string.And another."
   )
 
 })
@@ -42,7 +42,7 @@ test_that("Two strings, no interpolation, asis output", {
       'A sample string.',
       'And another.'
     ),
-    knitr::asis_output("A sample string. And another.")
+    knitr::asis_output("A sample string.And another.")
   )
 
 })
@@ -86,7 +86,7 @@ test_that("Two strings, no interpolation, cat, before and after", {
       before = 'Text before.',
       after = 'Text after.'
     ),
-    "Text before.\nA sample string. And another.\nText after."
+    "Text before.\nA sample string.And another.\nText after."
   )
 
 })
@@ -101,7 +101,7 @@ test_that("Two strings, no interpolation, cat, before and after vectors", {
       before = c('Text before.', 'With two strings.'),
       after = c('Text after.', 'With two strings.'),
     ),
-    "Text before.\nWith two strings.\nA sample string. And another. \nText after.\nWith two strings."
+    "Text before.\nWith two strings.\nA sample string.And another.\nText after.\nWith two strings."
   )
 
 })
@@ -115,7 +115,7 @@ test_that("Two strings, no interpolation, asis, before and after vectors", {
       before = c('Text before.', 'With two strings.'),
       after = c('Text after.', 'With two strings.'),
     ),
-    knitr::asis_output("Text before.\nWith two strings.\nA sample string. And another. \nText after.\nWith two strings.")
+    knitr::asis_output("Text before.\nWith two strings.\nA sample string.And another.\nText after.\nWith two strings.")
   )
 
 })
@@ -170,7 +170,7 @@ test_that("Interpolation, scalars, cat output", {
 
   expect_equal(
     m(
-      'The discriminant:',
+      'The discriminant: ',
       '$\\Delta = {{delta}}$.',
       use_cat = TRUE
     ),
@@ -198,7 +198,7 @@ test_that("Interpolation, vectors", {
 
   expect_equal(
     m(
-      'The discriminant:',
+      'The discriminant: ',
       '$\\Delta = {{delta}}$.',
       use_cat = TRUE
     ),
@@ -223,7 +223,7 @@ test_that("Interpolation, two vectors", {
 
   expect_equal(
     m(
-      'The discriminant with $a = {{avalues}}$:',
+      'The discriminant with $a = {{avalues}}$: ',
       '$\\Delta = {{delta}}$.',
       use_cat = TRUE
     ),
@@ -232,3 +232,70 @@ test_that("Interpolation, two vectors", {
 
 })
 
+
+test_that("sep is not a terminator when after is present", {
+
+  expect_equal(
+    m(
+      'A sample string.',
+      'And another.',
+      sep = '/s/',
+      after = 'Text after.',
+      use_cat = TRUE
+    ),
+    "A sample string./s/And another.\nText after."
+  )
+
+})
+
+
+test_that("R printer prefix", {
+
+  reticulate::py_run_string(
+    'a, b, c = symbols(\'a b c\')'
+  )
+
+  reticulate::py_run_string(
+    'delta = sqrt(b**2 - 4*a*c)\navalues = list(range(4))'
+  )
+
+  reticulate::py_run_string(
+    'delta = [delta.subs({a : i}) for i in avalues]'
+  )
+
+  expect_equal(
+    m(
+      'The discriminant with a = {{r:avalues}}: ',
+      'Delta = {{r:delta}}.',
+      use_cat = TRUE
+    ),
+    "The discriminant with a = 0: Delta = sqrt(b^2).\nThe discriminant with a = 1: Delta = sqrt(b^2 - 4*c).\nThe discriminant with a = 2: Delta = sqrt(b^2 - 8*c).\nThe discriminant with a = 3: Delta = sqrt(b^2 - 12*c)."
+  )
+
+})
+
+
+test_that("LaTeX printer prefix", {
+
+  reticulate::py_run_string(
+    'a, b, c = symbols(\'a b c\')'
+  )
+
+  reticulate::py_run_string(
+    'delta = sqrt(b**2 - 4*a*c)\navalues = list(range(4))'
+  )
+
+  reticulate::py_run_string(
+    'delta = [delta.subs({a : i}) for i in avalues]'
+  )
+
+  expect_equal(
+    m(
+      'The discriminant with a = {{l:avalues}}: ',
+      'Delta = {{l:delta}}.',
+      use_cat = TRUE
+    ),
+    "The discriminant with a = 0: Delta = \\sqrt{b^{2}}.\nThe discriminant with a = 1: Delta = \\sqrt{b^{2} - 4 c}.\nThe discriminant with a = 2: Delta = \\sqrt{b^{2} - 8 c}.\nThe discriminant with a = 3: Delta = \\sqrt{b^{2} - 12 c}."
+  )
+
+})

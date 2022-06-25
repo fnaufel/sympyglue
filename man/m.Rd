@@ -66,11 +66,12 @@ How interpolation works:
 
 The strings in \code{...} may contain \emph{fields} of the form \verb{\{\{text\}\}.}
 
-If \code{text} starts with a colon, different printers are invoked for this field, depending on the character following the colon:
+If \code{text} starts with a special prefix, different printers are invoked for this field, depending on the prefix:
 \itemize{
-\item \verb{:l }: use LaTeX printer on the Sympy expression denoted by the rest of the field. This is also the default behavior, when \code{text} does not begin with a colon.
-\item \verb{:r }: use R printer on the Sympy expression denoted by the rest of the field.
-\item \verb{:g }: use \emph{original glue behavior} --- interpolation uses R environment --- on the R expression denoted by the rest of the field.
+\item \verb{l: }: use LaTeX printer on the Sympy expression denoted by the rest of the field. This is also the default behavior, when \code{text} does not begin with a colon.
+\item \verb{r: }: use R printer on the Sympy expression denoted by the rest of the field.
+\item \verb{s: }: use string printer on the Sympy expression denoted by the rest of the field.
+\item \verb{g: }: use \emph{original glue behavior} --- interpolation uses R environment --- on the R expression denoted by the rest of the field.
 }
 }
 \author{
